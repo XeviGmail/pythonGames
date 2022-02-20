@@ -9,12 +9,14 @@ class Game():
     def __init__(self):
         self.FPS = 60
         self.clock = pygame.time.Clock()
+
         # Edges
         self.screen_width = 600
         self.screen_height = 600
         self.space = pymunk.Space()
         self.screen = pygame.display.set_mode((self.screen_width, self.screen_height))
         pygame.display.set_caption('Asteroides')
+
         # Rocks (space, pos_x, pos_y, velocity, radius)
         self.rocks = pygame.sprite.Group()
         for _ in range(8):
@@ -28,18 +30,39 @@ class Game():
         self.player = pygame.sprite.GroupSingle(self.player_sprite)
         # self.player_sprite.set_images(self.get_player_image_2())
 
+        # Fonts
+        self.consolas = pygame.font.match_font('consolas')
+        self.times = pygame.font.match_font('times')
+        self.couries = pygame.font.match_font('courier')
+
+        # Puntuacion
+        self.puntuacion = 0
+
+    def update_nave(self):
+        if self.puntuacion >=  20 and self.puntuacion<40:
+            self.player_sprite.set_num_laser(2)
+        if self.puntuacion  >=  40:
+            self.player_sprite.set_num_laser(3)
+
     def cc(self, point):
+        """
+            Concert coordinades
+        """
         return int(point[0]), self.screen_height - int(point[1])
 
     def get_player_image(self):
         animacion_nave = []
         for i in range(15):
             archivo_nave = f'nave-1-{i:02d}.png'
-            image = pygame.image.load(os.path.join('../graphics/ship/01', archivo_nave))
+            image_raw = pygame.image.load(os.path.join('../graphics/ship/01', archivo_nave))
+            image = pygame.transform.scale(image_raw, (64, 32))
             animacion_nave.append(image)
         return animacion_nave
 
     def get_player_image_2(self):
+        """
+            para demostrar que se puede cambiar na nave on the fly
+        """
         animacion_nave = []
         for i in range(16):
             archivo_nave = f'nave-1-{i:02d}.png'
@@ -55,10 +78,11 @@ class Game():
                 if laser_rocks_colision:
                     for rock in laser_rocks_colision:
                         rock.eliminar()
+                        self.puntuacion += 1
                         velocity = (random.uniform(-60, 60), random.uniform(-200, 0))
                         self.rock_sprite = Rock(self.space, random.uniform(50, 550), self.screen_height + 20, velocity, 20)
                         self.rocks.add(self.rock_sprite)
-                    laser.kill()
+                        laser.kill()
         # colision de rocas con player
         player_rocks_collision = pygame.sprite.spritecollide(self.player_sprite, self.rocks, False)
         if player_rocks_collision:
@@ -79,9 +103,17 @@ class Game():
     def background(self):
         self.screen.fill('grey')
 
+    def muestra_texto(self, fuente, texto, color, dimensiones, x, y):
+        tipo_letra = pygame.font.Font(fuente, dimensiones)
+        superficie = tipo_letra.render(texto, False, color)
+        rect = superficie.get_rect()
+        rect.center = (x, y)
+        self.screen.blit(superficie, rect)
+
     def run(self):
         self.background()
         self.player.update()
+        self.update_nave()
         self.player.sprite.lasers.draw(self.screen)
         self.player.draw(self.screen)
         self.rocks.update()
@@ -89,6 +121,7 @@ class Game():
         self.bounds()
         self.collision_checks()
         self.space.step(1/self.FPS)
+        self.muestra_texto(self.consolas, str(self.puntuacion).zfill(4), 'red', 40, 550, 50)
         pygame.display.flip()
         self.clock.tick(self.FPS)
 

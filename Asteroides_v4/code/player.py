@@ -29,6 +29,8 @@ class Player(pygame.sprite.Sprite):
         # reload player
         self.set_images(images)
 
+        self.num_laser = 1
+
     def set_images(self, images):
         self.max_fotograms = len(images)
         self.image = images[self.max_fotograms-1]
@@ -57,6 +59,9 @@ class Player(pygame.sprite.Sprite):
                 self.time_fotogram_zero = 0
                 self.image = self.image_recharge[self.max_fotograms-1]
 
+    def set_num_laser(self, num):
+        self.num_laser = num
+
     def get_input(self):
         keys = pygame.key.get_pressed()
         # movement of the player
@@ -70,9 +75,16 @@ class Player(pygame.sprite.Sprite):
             self.rect.y += self.speed
         # movement of the laser
         if keys[pygame.K_SPACE] and self.laser_ready:
-            self.shoot_laser(self.rect.center)
-            # self.shoot_laser(self.rect.midright)
-            # self.shoot_laser(self.rect.midleft)
+            if self.num_laser == 1:
+                self.shoot_laser(self.rect.center)
+            elif self.num_laser == 2:
+                self.shoot_laser(self.rect.midright)
+                self.shoot_laser(self.rect.midleft)
+            elif self.num_laser == 3:
+                self.shoot_laser((self.rect.centerx, self.rect.centery - 10))
+                self.shoot_laser(self.rect.midright)
+                self.shoot_laser(self.rect.midleft)
+
             self.laser_ready = False
             self.laser_time = pygame.time.get_ticks()
 
