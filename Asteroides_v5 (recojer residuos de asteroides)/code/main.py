@@ -23,7 +23,7 @@ class Game():
         self.residuos = pygame.sprite.Group()
         for _ in range(8):
             velocity = (random.uniform(-60, 60), random.uniform(-200, 0))
-            self.rock_sprite = Rock(self.space, random.uniform(50, 550), self.screen_height + 20, velocity, 20)
+            self.rock_sprite = Rock(self.space, random.uniform(50, 550), self.screen_height + 20, velocity, random.randint(1,2) * 10)
             self.rocks.add(self.rock_sprite)
 
         #Player (pos, speed, constraint, images)
@@ -80,13 +80,12 @@ class Game():
                 laser_rocks_colision = pygame.sprite.spritecollide(laser, self.rocks, False)
                 if laser_rocks_colision:
                     for rock in laser_rocks_colision:
-                        print(rock.body.velocity)
-                        residuo_sprite = Residuo(rock.rect.x, rock.rect.y, 20, rock.body.velocity)
+                        residuo_sprite = Residuo(rock.rect.x, rock.rect.y, rock.rock_radius, rock.body.velocity)
                         self.residuos.add(residuo_sprite)
                         rock.eliminar()
                         self.puntuacion += 1
                         velocity = (random.uniform(-60, 60), random.uniform(-200, 0))
-                        self.rock_sprite = Rock(self.space, random.uniform(50, 550), self.screen_height + 20, velocity, 20)
+                        self.rock_sprite = Rock(self.space, random.uniform(50, 550), self.screen_height + 20, velocity, random.randint(1,2) * 10)
                         self.rocks.add(self.rock_sprite)
                         laser.kill()
 
@@ -96,7 +95,7 @@ class Game():
             for rock in player_rocks_collision:
                 rock.eliminar()
                 velocity = (random.uniform(-60, 60), random.uniform(-200, 0))
-                self.rock_sprite = Rock(self.space, random.uniform(50, 550), self.screen_height + 20, velocity, 20)
+                self.rock_sprite = Rock(self.space, random.uniform(50, 550), self.screen_height + 20, velocity, random.randint(1,2) * 10)
                 self.rocks.add(self.rock_sprite)
 
         # Captura de residuos
