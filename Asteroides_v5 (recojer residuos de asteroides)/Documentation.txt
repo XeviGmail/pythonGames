@@ -1,0 +1,15 @@
+Descripcion del Juego
+
+- Como mejorar la nave
+    Desruyendo cosas podremos capturar elementos que nos ayudaran a mejorar nuestra nave
+    - Neodimio -> Laser
+    - H2O (Meteoritos) -> Cohetes
+    - Electronica (Naves) -> Mejorar Velocidades
+    - Ingenieros (Naves) -> Mejorar Cosas
+
+- Como se desmejora la nave
+    - Goples con Meteroitos
+    - Goples con Naves
+    - Alcanzados por Lasers
+
+    Podemos perder elementos al ser golpeados o alcanzados, tanto Ingenieros como fungibles
