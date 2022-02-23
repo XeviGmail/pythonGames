@@ -6,6 +6,7 @@ from player import Player
 from rock import Rock
 from residuo import Residuo
 from enemy import Enemy
+from laser import Laser
 
 class Game():
     def __init__(self):
@@ -33,6 +34,7 @@ class Game():
         self.enemies.add(self.enemy_sprite)
         self.enemy_sprite = Enemy(self.space, (150, 50))
         self.enemies.add(self.enemy_sprite)
+        self.enemy_lasers = pygame.sprite.Group()
 
 
         #Player (pos, speed, constraint, images)
@@ -100,24 +102,17 @@ class Game():
                 laser_enemy_colision = pygame.sprite.spritecollide(laser, self.enemies, False)
                 if laser_enemy_colision:
                     for enemy in laser_enemy_colision:
-                        """
-                            si mato el enemigo, me cargo tambien el laser, asi que tengo que buscar la manera de eliminar
-                            el enemigo sin cargarme el laser
-                        """
-
                         enemy.kill()
                         self.puntuacion += 10
                         laser.kill()
-
-
-        # enemies lasers against player
-        for enemy in self.enemies.sprites():
-            if enemy.lasers:
-                for laser in enemy.lasers:
-                    laser_player_colision = pygame.sprite.spritecollide(laser, self.player, False)
-                    if laser_player_colision:
-                        print('BURRUUUUUU')
-                        laser.kill()
+                        self.enemy_sprite = Enemy(self.space, (random.randint(50, 550), -10))
+                        self.enemies.add(self.enemy_sprite)
+        # Laser de los enemigos
+        if self.enemy_lasers:
+            for laser in self.enemy_lasers:
+                if pygame.sprite.spritecollide(laser, self.player, False):
+                    laser.kill()
+                    print('te han dado')
 
         # colision de rocas con player
         player_rocks_collision = pygame.sprite.spritecollide(self.player_sprite, self.rocks, False)
@@ -160,6 +155,12 @@ class Game():
         rect.center = (x, y)
         self.screen.blit(superficie, rect)
 
+    def enemy_shoot(self):
+        if self.enemies.sprites():
+            random_enemy = random.choice(self.enemies.sprites())
+            laser_sprite = Laser(random_enemy.rect.center, -6, 'blue')
+            self.enemy_lasers.add(laser_sprite)
+
     def run(self):
         self.background()
         self.player.update()
@@ -178,8 +179,9 @@ class Game():
         # Enemigos
         self.enemies.update()
         self.enemies.draw(self.screen)
-        for enemy in self.enemies.sprites():
-            enemy.lasers.draw(self.screen)
+
+        self.enemy_lasers.update()
+        self.enemy_lasers.draw(self.screen)
 
         self.bounds()
         self.collision_checks()
@@ -194,11 +196,18 @@ class Game():
 if __name__ == '__main__':
     pygame.init()
     game = Game()
+    """ 
+        creamos un evento que se ejecutara cada entre el random(1000, 2000)
+        Al ejecutarse el evento se ejecutara game.enemy_shoot()
+    """
+    ENEMY_LASER = pygame.USEREVENT + 1
+    pygame.time.set_timer(ENEMY_LASER, random.randint(1000, 2000))
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
+            if event.type == ENEMY_LASER:
+                game.enemy_shoot()
         game.run()
 
