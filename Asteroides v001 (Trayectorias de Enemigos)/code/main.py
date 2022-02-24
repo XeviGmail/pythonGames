@@ -5,9 +5,8 @@ import pymunk
 from player import Player
 from rock import Rock
 from residuo import Residuo
-from enemy import Enemy
 from laser import Laser
-
+from grupo_enemigos import GrupoEnemigos
 
 H_50D2FE = (80,210,254)
 
@@ -26,19 +25,17 @@ class Game():
         # Rocks (space, pos_x, pos_y, velocity, radius)
         self.rocks = pygame.sprite.Group()
         self.residuos = pygame.sprite.Group()
-        for _ in range(8):
+        for _ in range(4):
             velocity = (random.uniform(-60, 60), random.uniform(-200, 0))
             self.rock_sprite = Rock(self.space, random.uniform(50, 550), self.screen_height + 20, velocity, random.randint(1,2) * 10)
             self.rocks.add(self.rock_sprite)
 
         # Enemies
         self.enemies = pygame.sprite.Group()
-        self.enemy_sprite = Enemy(self.space, (300, 100), 40, 50)
-        self.enemies.add(self.enemy_sprite)
-        self.enemy_sprite = Enemy(self.space, (150, 50), 10, 10)
-        self.enemies.add(self.enemy_sprite)
-        self.enemy_lasers = pygame.sprite.Group()
+        self.groupo_enemies = GrupoEnemigos(self.enemies)
 
+        # Enemies Lasers
+        self.enemy_lasers = pygame.sprite.Group()
 
         #Player (pos, speed, constraint, images)
         speed_player = 5
@@ -109,8 +106,6 @@ class Game():
                         if enemy.is_dead():
                             enemy.kill()
                             self.puntuacion += 10
-                            self.enemy_sprite = Enemy(self.space, (random.randint(50, 550), -10), 10, 10)
-                            self.enemies.add(self.enemy_sprite)
                         laser.kill()
         # Laser de los enemigos
         if self.enemy_lasers:
@@ -152,8 +147,6 @@ class Game():
         for enemy in self.enemies:
             if enemy.rect.x <= -50 or enemy.rect.x >= 650 or enemy.rect.y <= -50 or enemy.rect.y >= 650 :
                 enemy.kill()
-                self.enemy_sprite = Enemy(self.space, (random.randint(50, 550), -10), 10, 10)
-                self.enemies.add(self.enemy_sprite)
 
     def background(self):
         self.screen.fill('grey')
@@ -199,6 +192,7 @@ class Game():
         # Enemigos
         self.enemies.update()
         self.enemies.draw(self.screen)
+        self.groupo_enemies.update()
 
         self.enemy_lasers.update()
         self.enemy_lasers.draw(self.screen)
@@ -222,7 +216,7 @@ if __name__ == '__main__':
         Al ejecutarse el evento se ejecutara game.enemy_shoot()
     """
     ENEMY_LASER = pygame.USEREVENT + 1
-    pygame.time.set_timer(ENEMY_LASER, random.randint(1000, 2000))
+    pygame.time.set_timer(ENEMY_LASER, random.randint(500, 1000))
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
