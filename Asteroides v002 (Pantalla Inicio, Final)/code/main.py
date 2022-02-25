@@ -1,3 +1,5 @@
+# https://www.youtube.com/watch?v=XeY_bKs3v00
+
 import os.path
 import random
 import pygame, sys
@@ -44,9 +46,7 @@ class Game():
         # self.player_sprite.set_images(self.get_player_image_2())
 
         # Fonts
-        self.consolas = pygame.font.match_font('consolas')
-        self.times = pygame.font.match_font('times')
-        self.couries = pygame.font.match_font('courier')
+        self.consolas = pygame.font.SysFont('consolas', 30)
 
         # Puntuacion
         self.puntuacion = 0
@@ -151,12 +151,12 @@ class Game():
     def background(self):
         self.screen.fill('grey')
 
-    def muestra_texto(self, fuente, texto, color, dimensiones, x, y):
-        tipo_letra = pygame.font.Font(fuente, dimensiones)
-        superficie = tipo_letra.render(texto, False, color)
-        rect = superficie.get_rect()
-        rect.center = (x, y)
-        self.screen.blit(superficie, rect)
+    # def muestra_texto(self, fuente, texto, color, dimensiones, x, y):
+    #     tipo_letra = pygame.font.Font(fuente, dimensiones)
+    #     superficie = tipo_letra.render(texto, False, color)
+    #     rect = superficie.get_rect()
+    #     rect.center = (x, y)
+    #     self.screen.blit(superficie, rect)
 
     def enemy_shoot(self):
         if self.enemies.sprites():
@@ -204,11 +204,21 @@ class Game():
         self.space.step(1/self.FPS)
 
         # Text
-        self.muestra_texto(self.consolas, str(self.puntuacion).zfill(4), 'red', 40, 550, 50)
-        self.muestra_texto(self.consolas, f'Residuos: {str(self.num_residuos).zfill(4)}', 'red', 40, 250, 50)
+        # self.muestra_texto(self.consolas, str(self.puntuacion).zfill(4), 'red', 40, 550, 50)
+        # self.muestra_texto(self.consolas, f'Residuos: {str(self.num_residuos).zfill(4)}', 'red', 40, 250, 50)
         self.life_bar(self.screen, 380, 15, self.player_sprite.get_life())
         pygame.display.flip()
         self.clock.tick(self.FPS)
+
+    def intro(self):
+        tecla = pygame.key.get_pressed()
+        return False if tecla[pygame.K_RETURN] else True
+
+    def ventana_intro(self):
+        self.screen.fill((0,0,0))
+        instrucciones = self.consolas.render('Asteroides y mas...', False, 'red')
+        self.screen.blit(instrucciones, (self.screen_width//2 - instrucciones.get_width()//2, 300))
+        pygame.display.flip()
 
 if __name__ == '__main__':
     pygame.init()
@@ -217,6 +227,14 @@ if __name__ == '__main__':
         creamos un evento que se ejecutara cada entre el random(1000, 2000)
         Al ejecutarse el evento se ejecutara game.enemy_shoot()
     """
+
+    while game.intro():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        game.ventana_intro()
+
     ENEMY_LASER = pygame.USEREVENT + 1
     pygame.time.set_timer(ENEMY_LASER, random.randint(500, 1000))
     while True:
