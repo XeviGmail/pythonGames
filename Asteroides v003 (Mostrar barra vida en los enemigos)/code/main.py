@@ -231,6 +231,10 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_ESCAPE]:
+            pygame.quit()
+            sys.exit()
         game.ventana_intro()
 
     ENEMY_LASER = pygame.USEREVENT + 1
@@ -238,6 +242,10 @@ if __name__ == '__main__':
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_ESCAPE]:
                 pygame.quit()
                 sys.exit()
             if event.type == ENEMY_LASER:

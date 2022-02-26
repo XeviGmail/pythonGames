@@ -1,6 +1,4 @@
-import random
 import pygame
-import pymunk
 from laser import Laser
 
 class Player(pygame.sprite.Sprite):
