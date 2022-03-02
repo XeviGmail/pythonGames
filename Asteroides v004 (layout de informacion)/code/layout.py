@@ -1,14 +1,14 @@
 import pygame
 
 class Layout():
-    def __init__(self, screen, x, y, width, height, color):
+    def __init__(self, screen, rect, color):
         self.screen = screen
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
+        self.x = rect['x']
+        self.y = rect['y']
+        self.width = rect['width']
+        self.height = rect['height']
         self.color = color
-        self.layout = pygame.Surface((width, height))
+        self.layout = pygame.Surface((self.width, self.height))
         # Fonts
         self.size = 25
         self.consolas = pygame.font.SysFont('consolas', self.size)
