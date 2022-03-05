@@ -1,0 +1,51 @@
+Descripcion del Juego
+
+- Como mejorar la nave
+    Desruyendo cosas podremos capturar elementos que nos ayudaran a mejorar nuestra nave
+    - Neodimio -> Laser
+    - H2O (Meteoritos) -> Cohetes
+    - Electronica (Naves) -> Mejorar Velocidades
+    - Ingenieros (Naves) -> Mejorar Cosas
+
+- Como se desmejora la nave
+    - Goples con Meteroitos
+    - Goples con Naves
+    - Alcanzados por Lasers
+
+    Podemos perder elementos al ser golpeados o alcanzados, tanto Ingenieros como fungibles
+
+----- Guion del Juego -----
+
+Somos mineros espaciales y los piratas intentaran robar nuestros recursos.
+1.- Iremos destruyendo Asteroides para recojer recursos minerales
+    -Neodimio: Mejorar Lasers
+    -Oro: Trade
+    -Rubidio: Mejorar shield
+    -Uranio: Mejorar Misiles
+2.- Naves de piratas intentaran destruirnos para quedarse con nuestros recursos.
+    Si destruimos sus naves podremos obtener
+        Microchips: Guiado de misiles
+        Ingenieros: Mejora de Lasers (velocidad, potencia, cadencia)
+                    Shield (duracion, potencia)
+                    Misiles (potencia, guiado, distancia)
+                    Nave (velocidad, dureza)
+3.- Si somos golpeados por asteroides o naves podremos ir perdiendo majoras de la nava hasta que quede destruida.
+
+----- Guion -----
+
+1.- Empezamos recolectando asteroides
+    al Recolectar mas de 10 asteroides
+2.- vendra la primera tanda de naves
+    al Recolectar mas de:
+        10 (ingenieros + microchips)
+3.- llegaremos a la base de operaciones (la nave tirara p'arriba y todo quedara en blanco)
+    aqui podremos ver lo que hemos recolectado y hacer nuestros upgrades
+
+
+
+
+
+
+
+
+
