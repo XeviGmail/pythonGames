@@ -4,11 +4,15 @@ from player import Player
 from layout import Layout
 from rock import Rock
 from residuo import Residuo
+from draw import Draw
 
 class Game():
     def __init__(self):
         self.game_settings()
         self.layouts_settings()
+        self.layout_intro_settings()
+        self.layout_info_settings()
+        self.layout_dock_settings()
         self.player_settings()
         self.rocks_settings()
         self.residuos_settings()
@@ -45,6 +49,14 @@ class Game():
     def layouts_settings(self):
         # Layouts
         padding = 10
+        layout_intro_rect = {
+            'x': padding,
+            'y': padding,
+            'width': self.width - 2*padding,
+            'height': self.height - 2*padding
+        }
+        self.layout_intro = Layout(self.screen, layout_intro_rect, 'grey')
+
         layout_info_rect = {
             'x': padding,
             'y': padding,
@@ -67,6 +79,12 @@ class Game():
             'height': self.height - (2 * padding)
         }
         self.layout_dock = Layout(self.screen, self.layout_dock_rect, 'white')
+    def layout_intro_settings(self):
+        self.draw_intro = Draw(self.layout_intro)
+    def layout_info_settings(self):
+        self.draw_info = Draw(self.layout_info)
+    def layout_dock_settings(self):
+        self.draw_dock = Draw(self.layout_dock)
     def residuos_settings(self):
         self.residuos = pygame.sprite.Group()
         self.residuos_aparicion = 1
@@ -114,27 +132,25 @@ class Game():
                     self.player_sprite.set_num_laser(2)
                 if self.num_residuos >= 10:
                     self.player_sprite.set_num_laser(3)
-    def write_dock(self):
-        self.button.draw()
     def write_info(self):
         score = 103
         tecnicos = 23
         ships = 5
         laser_cooldown = 600
-        self.layout_info.write_line(0, 'General Information')
-        self.layout_info.write_line(2, 'Points', str(score).zfill(5))
-        self.layout_info.write_line(3, 'Neodimio', str(self.num_residuos).zfill(5))
-        self.layout_info.write_line(4, 'Ships', str(ships).zfill(5))
-        self.layout_info.write_line(5, 'Tecknics', str(tecnicos).zfill(5))
-        self.layout_info.write_line(6, 'Ship Speed', str(tecnicos).zfill(5))
-        self.layout_info.write_line(7, 'Laser Speed', str(tecnicos).zfill(5))
-        self.layout_info.write_line(8, 'Laser Cooldown', str(laser_cooldown))
-        self.layout_info.write_line(9, 'Laser Power', '15')
-        self.layout_info.write_line(10, 'Asteroides', str(self.asteroides).zfill(5))
-        self.layout_info.write_line(11, 'Shield Time', str(self.player_sprite.get_shield_up_time()).zfill(5))
-    def write_dock(self):
-        image = pygame.image.load('../graphics/layout/suma.png')
-        self.layout_dock.write_button((0, 0), (32, 32), image)
+        size = 20
+        font = pygame.font.SysFont('consolas', size)
+        self.draw_info.line(0, 'General Information', '', font, 'black')
+        self.draw_info.line(2, 'Points', str(score).zfill(5), font, 'red', 'blue')
+        self.draw_info.line(3, 'Neodimio', str(self.num_residuos).zfill(5), font, 'red')
+        self.draw_info.line(4, 'Ships', str(ships).zfill(5), font, 'red')
+        self.draw_info.line(5, 'Tecknics', str(tecnicos).zfill(5), font, 'red')
+        self.draw_info.line(6, 'Ship Speed', str(tecnicos).zfill(5), font, 'red')
+        self.draw_info.line(7, 'Laser Speed', str(tecnicos).zfill(5), font, 'red')
+        self.draw_info.line(8, 'Laser Cooldown', str(laser_cooldown), font, 'red')
+        self.draw_info.line(9, 'Laser Power', '15', font, 'red')
+        self.draw_info.line(10, 'Asteroides', str(self.asteroides).zfill(5), font, 'red')
+        self.draw_info.line(11, 'Shield Time', str(self.player_sprite.get_shield_up_time()).zfill(5), font, 'red')
+
     def bounds(self):
         for rock in self.rocks:
             if rock.get_out_of_bounds():
@@ -155,10 +171,23 @@ class Game():
             animacion_nave.append(image)
         return animacion_nave
 
+    def run_intro(self):
+        self.screen.fill('black')
+        self.layout_intro.update()
+        size = 30
+        font = pygame.font.SysFont('consolas', size)
+        self.draw_intro.line(1, 'Hola', 'valor', font, 'red')
+        self.draw_intro.line(2, 'Adios', 'hasta pronto', font, 'blue')
+        self.draw_intro.line_box((200,200),'Caracandau', font, 'cyan')
+
+        pygame.display.flip()
+        self.clock.tick(self.FPS)
+
     def run_dock(self):
         self.screen.fill('white')
         self.layout_dock.update()
-        self.write_dock()
+        image = pygame.image.load('../graphics/layout/suma.png')
+        self.draw_dock.button_image((100,100), image, (100,100))
         pygame.display.flip()
         self.clock.tick(self.FPS)
 
@@ -186,6 +215,16 @@ class Game():
 if __name__ == '__main__':
     pygame.init()
     game = Game()
+    intro = True
+    while intro:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_ESCAPE]:
+                intro = False
+        game.run_intro()
 
     end_dock = False
     while not end_dock:

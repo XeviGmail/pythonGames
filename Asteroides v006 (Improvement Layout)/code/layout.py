@@ -13,7 +13,7 @@ class Layout():
         self.size = 25
         self.consolas = pygame.font.SysFont('consolas', self.size)
 
-    def write(self, line, label, value=''):
+    def write_line(self, line, label, value=''):
         padding = 10
         # Etiqueta
         image = self.consolas.render(label, 1, 'red')
@@ -23,6 +23,11 @@ class Layout():
         image = self.consolas.render(value, 1, 'red')
         rect = image.get_rect(topright=(self.width - padding, self.y + line * (self.size + self.size/2)))
         self.draw(image, rect)
+
+    def write_button(self, pos, size, image):
+        image_btn = pygame.transform.scale(image, size)
+        rect = image_btn.get_rect(topleft=(self.x + pos[0], self.y + pos[1]))
+        self.draw(image_btn, rect)
 
     def draw(self, image, rect):
         self.screen.blit(image, rect)
