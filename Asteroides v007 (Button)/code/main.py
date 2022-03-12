@@ -179,6 +179,7 @@ class Game():
         self.draw_intro.line(1, 'Hola', 'valor', font, 'red')
         self.draw_intro.line(2, 'Adios', 'hasta pronto', font, 'blue')
         self.draw_intro.line_box((200,200),'Caracandau', font, 'cyan')
+        self.draw_intro.button_text((100,100), 'PAPARRUCHAS', (30), font)
 
         pygame.display.flip()
         self.clock.tick(self.FPS)

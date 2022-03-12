@@ -10,6 +10,16 @@ class Draw():
         rect = image.get_rect(topleft=pos)
         self.layout.draw(image, (rect.x, rect.y))
 
+    def button_text(self, pos, text, size, font):
+        rect = pygame.Rect(pos, (size, size))
+        color = 'orange'
+        surf_text = font.render(text, False, 'green')
+        rect_text = surf_text.get_rect(center=rect.center)
+        rect_text.x = 400
+        rect_text.y = 400
+        self.layout.draw(surf_text, rect_text)
+        pygame.draw.rect(self.layout, 'red', 400)
+
     def line(self, line, label, value, font, colorl, colorv=''):
         colorv = colorl if colorv == '' else colorv
         padding = 10

@@ -22,7 +22,6 @@ class Rock(pygame.sprite.Sprite):
         image_raw = pygame.image.load('../graphics/rocks/rock0.png')
         self.image = pygame.transform.scale(image_raw, (2 * radius, 2 * radius))
         self.rect = self.image.get_rect()
-
         self.out_of_bounds = False
 
     def bounds(self):
