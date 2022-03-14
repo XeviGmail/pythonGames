@@ -8,7 +8,7 @@ class Food:
         self.game_window = self.game.game_window
         self.origin = copy.deepcopy(self.game_window.pos)
         self.pos = [random.randint(0, self.game.game_window.cols-1),
-                    random.randint(0, self.game.game_window.rows)]
+                    random.randint(0, self.game.game_window.rows-1)]
 
     def update(self):
         pass

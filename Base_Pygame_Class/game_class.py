@@ -11,6 +11,7 @@ class Game():
         pygame.init()
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.font = pygame.font.SysFont('arial', 20)
         self.running = True
         self.state = 'intro'
         self.intro_buttons = []
@@ -37,6 +38,10 @@ class Game():
         # DEAD BUTTONS
         dead_play_again_button = Button(self, (SCREEN_WIDTH//2)-50, 20, 140, 30, (12, 71, 110), hover_colour=(35, 160, 203), function=self.reset, text='PLAY AGAIN')
         self.dead_buttons.append(dead_play_again_button)
+
+    def show_text(self, text, pos):
+        text = self.font.render(text, False, BLACK)
+        self.screen.blit(text, pos)
 
     def reset(self):
         self.state = 'play'
@@ -138,6 +143,7 @@ class Game():
         self.game_window.draw()
         for button in self.active_buttons:
             button.draw()
+        self.show_text(str(self.snake.length), [20, 20])
 
     def playing_quit(self):
         self.running = False
