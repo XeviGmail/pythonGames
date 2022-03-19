@@ -1,31 +1,56 @@
-import pygame, sys
-size = (800, 500)
-screen = pygame.display.set_mode(size)
-pygame.display.set_caption('Button Demo')
-btn_image = pygame.image.load('./graphics/Player/player_stand.png')
+import pygame
+from sys import exit
 
-class Button():
-    def __init__(self, pos, image):
-        self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.topleft = pos
+WIDTH, HEIGHT = 800, 800
+SIZE = (WIDTH, HEIGHT)
+FPS  = 60
+
+class Button1:
+    def __init__(self, pos, size, text):
+        self.pos = pos
+        self.size = size
+        self.font = pygame.font.Font(None, 30)
+        self.btn_text = self.font.render(text, False, 'yellow',)
+        self.btn_rect = self.btn_text.get_rect(center=pos)
+
     def draw(self):
-        screen.blit(self.image, (self.rect.x, self.rect.y))
+        pygame.draw.rect(screen, 'black', self.btn_rect)
+        screen.blit(self.btn_text, self.btn_rect)
+        print(self.btn_rect.height)
 
-button = Button((100, 200), btn_image)
+class Button:
+    def __init__(self, pos, size, text):
+        self.pos = pos
+        self.size = size
+        self.button_rect = pygame.Rect(pos[0], pos[1], size[0], size[1])
+        self.font = pygame.font.Font(None, 30)
+        self.btn_text = self.font.render(text, False, 'yellow')
+        self.btn_text_width = self.btn_text.get_width()
+        self.btn_text_height = self.btn_text.get_height()
+
+    def draw(self):
+        pygame.draw.rect(screen, 'black', self.button_rect)
+        x = self.pos[0] + (self.size[0] - self.btn_text_width)//2
+        y = self.pos[1] + (self.size[1] - self.btn_text_height)//2
+        screen.blit(self.btn_text,(x, y))
+
+
 if __name__ == '__main__':
     pygame.init()
+    screen = pygame.display.set_mode(SIZE)
+    screen.fill('white')
+    pygame.display.set_caption('Buttons')
     clock = pygame.time.Clock()
-    end_dock = False
-    while not end_dock:
+    button = Button((300, 300), (200, 100), 'PAPARRUCHAS')
+    running = True
+    while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_ESCAPE]:
-                end_dock = True
-        screen.fill('grey')
+                exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    running = False
         button.draw()
-        pygame.display.update()
-        clock.tick(60)
+        pygame.display.flip()
+        clock.tick(FPS)
